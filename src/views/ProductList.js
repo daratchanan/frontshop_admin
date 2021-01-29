@@ -7,35 +7,44 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
+import { Container, Typography } from '@material-ui/core';
 import axios from 'axios';
 import ProductItem from './ProductItem';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
    table: {
       minWidth: 650,
    },
    productListText: {
+      marginTop: theme.spacing(3),
       textAlign: "center",
-      marginTop: theme.spacing(3)
+   },
+   textHeader: {
+      fontWeight: "bold",
+      fontSize: "1rem"
    }
 }));
+
 
 export default function ProductList() {
    const classes = useStyles();
 
-   const [productItems, setProductItems] = useState([]);
+   const [productLists, setProductLists] = useState([]);
 
-   const fetchProducts = () => {
-      axios.get("http://localhost:8000/products")
+
+   const fetchProducts = async () => {
+      await axios
+         .get("http://localhost:8000/products/")
          .then(res => {
-            setProductItems(res.data.products);
+            setProductLists(res.data.products);
          })
          .catch(err => {
             console.log(err);
          })
-   };
+   }
 
    useEffect(() => {
       fetchProducts();
@@ -51,26 +60,24 @@ export default function ProductList() {
                <TableHead>
                   <TableRow>
                      <TableCell></TableCell>
-                     <TableCell align="center">Product Name</TableCell>
-                     <TableCell align="center">Description</TableCell>
-                     <TableCell align="center">Price</TableCell>
-                     <TableCell align="center">Product Type</TableCell>
-                     <TableCell align="center"></TableCell>
+                     <TableCell className={classes.textHeader} align="center">Product Name</TableCell>
+                     <TableCell className={classes.textHeader} align="center">Description</TableCell>
+                     <TableCell className={classes.textHeader} align="center">Price</TableCell>
+                     <TableCell className={classes.textHeader} align="center">Product Type</TableCell>
+                     <TableCell></TableCell>
                   </TableRow>
                </TableHead>
                <TableBody>
-                  {productItems.map((product) => (
+                  {productLists.map((product) => (
                      <ProductItem
                      key={product.id}
                      product={product}
                      fetchProducts={fetchProducts}
                      />
-
-                     // ย้ายไปสร้าง component ใหม่
                   ))}
                </TableBody>
             </Table>
          </TableContainer>
       </Container>
    );
-};
+}
