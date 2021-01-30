@@ -56,17 +56,37 @@ export default function ProductItem({ product, fetchProducts }) {
          })
    }
 
+   const isDelete = (id) => {
+      const input = window.confirm("Do you want to delete?")
+      if (input) {
+         deleteProduct(id);
+      } 
+   };
+
+   const isConfirm = (id) => {
+      const input = window.confirm("Do you want to save?")
+      if (input) {
+         onUpdate(id);
+      } else {
+         setName(product.name);
+         setDescription(product.description);
+         setPrice(product.price);
+         setProductType(product.productType);
+         setIsDisable(true);
+      }
+   }
+
    const onUpdate = async (id) => {
       const data = { name, description, price, productType }
       await axios
-      .put(`http://localhost:8000/products/${id}`, data)
-      .then(res => {
-         alert("update product.");
-         setIsDisable(true);
-      })
-      .catch(err => {
-         console.log(err);
-      })
+         .put(`http://localhost:8000/products/${id}`, data)
+         .then(res => {
+            alert("update product.");
+            setIsDisable(true);
+         })
+         .catch(err => {
+            console.log(err);
+         })
    }
 
 
@@ -113,22 +133,26 @@ export default function ProductItem({ product, fetchProducts }) {
             />
          </TableCell>
          <TableCell align="center" style={{ width: "150px" }}>
-            {isDisable?
+            {isDisable ?
+               <IconButton
+                  aria-label="edit"
+                  onClick={onEdit}
+               >
+                  <EditIcon style={{ color: "#00c853" }} />
+               </IconButton>
+               :
+               <IconButton
+                  aria-label="save"
+                  onClick={() => isConfirm(product.id)}
+               >
+                  <SaveIcon style={{ color: "#2196f3" }} />
+               </IconButton>
+            }
             <IconButton
-               aria-label="edit"
-               onClick={onEdit}
+               aria-label="delete"
+               onClick={() => isDelete(product.id)}
+               //onClick={() => deleteProduct(product.id)}
             >
-               <EditIcon style={{ color: "#00c853" }} />
-            </IconButton>
-            :
-            <IconButton
-               aria-label="save"
-               onClick={() => onUpdate(product.id)}
-            >
-               <SaveIcon style={{ color: "#2196f3" }} />
-            </IconButton>
-         }
-            <IconButton aria-label="delete" onClick={() => deleteProduct(product.id)}>
                <DeleteIcon style={{ color: "#ff3d00" }} />
             </IconButton>
          </TableCell>
