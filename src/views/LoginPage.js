@@ -13,6 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import axios from 'axios';
+import localStorage from "../services/localStorage";
+import { useHistory } from 'react-router-dom';
 
 
 function Copyright() {
@@ -51,6 +53,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Login() {
    const classes = useStyles();
 
+   const histoty = useHistory();
+
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
 
@@ -68,10 +72,12 @@ export default function Login() {
       await axios
       .post("http://localhost:8000/admin/login", { email, password })
       .then(res => {
+         console.log(res);
          alert("Login success");
          setEmail("");
          setPassword("");
-         localStorage.setItem("STORE_TOKEN",res.data.token)
+         localStorage.setToken(res.data.token);
+         histoty.push("/productlist")
       })
       .catch(err => {
          alert(err)

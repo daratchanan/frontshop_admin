@@ -28,7 +28,6 @@ const roles = {
       components.login,
    ],
    USER: [
-      components.login,
       components.inputProduct,
       components.productList
    ],
