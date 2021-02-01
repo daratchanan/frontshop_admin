@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,9 +12,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import axios from 'axios';
+import axios from '../config/axios';
 import localStorage from "../services/localStorage";
 import { useHistory } from 'react-router-dom';
+import UserContext from '../context/UserContext';
 
 
 function Copyright() {
@@ -51,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login() {
+   const { setRole } = useContext(UserContext)
    const classes = useStyles();
 
    const histoty = useHistory();
@@ -70,14 +72,12 @@ export default function Login() {
       event.preventDefault();
 
       await axios
-      .post("http://localhost:8000/admin/login", { email, password })
+      .post("/admin/login", { email, password })
       .then(res => {
-         console.log(res);
          alert("Login success");
-         setEmail("");
-         setPassword("");
          localStorage.setToken(res.data.token);
-         histoty.push("/productlist")
+         setRole(localStorage.getRole());
+         histoty.push("/productlist");
       })
       .catch(err => {
          alert(err)

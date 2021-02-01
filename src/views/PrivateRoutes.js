@@ -1,22 +1,21 @@
-import React,{useState} from 'react'
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import React, { useContext } from 'react'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import UserContext from '../context/UserContext';
 import roleList from "../config/roles";
-import PageNotFound from "./PageNotFound";
-import localStorage from "../services/localStorage";
+import PageNotfound from "./PageNotFound";
 
 export default function PrivateRoutes() {
-   const [role, setRole] = useState(localStorage.getRole());
-
+   const { role, setRole } = useContext(UserContext);
    const pageList = roleList[role];
 
    return (
       <>
          <BrowserRouter>
             <Switch>
-               {pageList.map((page, idx) =>
-                  <Route key={idx} exact path={page.path} component={page.page} />
+               {pageList.map(({path,page}, idx) =>
+                  <Route key={idx} exact path={path} component={page} />
                )}
-               <Route path="*" component={PageNotFound} />
+               <Route path="*" component={PageNotfound}/>
             </Switch>
          </BrowserRouter>
       </>

@@ -10,9 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import { Container, Typography } from '@material-ui/core';
 import axios from 'axios';
 import ProductItem from './ProductItem';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+
 
 const useStyles = makeStyles((theme) => ({
    table: {
@@ -34,10 +32,9 @@ export default function ProductList() {
 
    const [productLists, setProductLists] = useState([]);
 
-
    const fetchProducts = async () => {
       await axios
-         .get("http://localhost:8000/products/")
+         .get("/products/productlist")
          .then(res => {
             setProductLists(res.data.products);
          })
