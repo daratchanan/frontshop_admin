@@ -1,19 +1,16 @@
+import React, { useState } from 'react'
+import localStorage from "./services/localStorage";
+import UserContext from './context/UserContext';
 import PrivateRoutes from "./views/PrivateRoutes";
-import localStorage from "./services/localStorage"
-import { useState } from "react";
-import UserContext from "./context/UserContext";
 
-function App() {
-
+export default function App() {
    const [role, setRole] = useState(localStorage.getRole());
 
    return (
       <>
-         <UserContext.Provider value={{ role, setRole }}>
+         <UserContext.Provider value={{role, setRole}}>
             <PrivateRoutes />
          </UserContext.Provider>
       </>
-   );
+   )
 }
-
-export default App;

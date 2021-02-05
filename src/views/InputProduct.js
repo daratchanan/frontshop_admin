@@ -17,6 +17,7 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import { useEffect } from 'react';
+import { DropzoneDialog } from 'material-ui-dropzone';
 
 function Copyright() {
    return (
@@ -58,7 +59,7 @@ export default function InputProduct() {
    const [description, setDescription] = useState("");
    const [price, setPrice] = useState("");
    const [productType, setProductType] = useState("");
-   const [uploadImg, setUploadImg] = useState(null);
+   const [uploadImg, setUploadImg] = useState({ open: false, files: [] });
    const [productList, setProductList] = useState([]);
 
    const handleProductName = (event) => {
@@ -77,16 +78,29 @@ export default function InputProduct() {
       setProductType(event.target.value)
    };
 
-   const handleUploadImg = (event) => {
-      setUploadImg(event.target.file[0])
+   const handleClose = () => {
+      setUploadImg({ open: false})
    };
 
+
+   // const handleClose = () => {
+   //    setSelectedFiles({ open: false });
+   // }
+
+   const handleSave = (files) => {
+      //Saving files to state for further use and closing Modal.
+      setUploadImg({ files, open: false });
+   }
+
+   const handleOpen = () => {
+      console.log('open');
+      setUploadImg({ open: true });
+   }
+
    const fetchProductType = () => {
-      axios.get("http://localhost:8000/products/allProductType")
+      axios.get("/products/allProductType")
          .then(res => {
-            console.log(res);
             setProductList(res.data.productTypes);
-            console.log(res.data.productTypes);
          })
          .catch(err => {
             console.log(err);
@@ -101,10 +115,10 @@ export default function InputProduct() {
       formData.append("description", description)
       formData.append("price", price)
       formData.append("productType_id", productType)
-      formData.append("image", uploadImg)
-
+      //formData.append("image", uploadImg)
+      formData.append('image', uploadImg.files[0]);
       await axios
-         .post("http://localhost:8000/products", formData)
+         .post("/products", formData)
          .then(res => {
             alert("Add product success")
          })
@@ -164,7 +178,7 @@ export default function InputProduct() {
                         name="price"
                         autoComplete="price"
                         onChange={handlePrice}
-                     
+
                      />
                   </Grid>
                   <Grid item xs={12}>
@@ -185,16 +199,27 @@ export default function InputProduct() {
                         variant="contained"
                         color="primary"
                         component="label"
+                        onClick={handleOpen}
                      >
                         Upload Img
-                        <input
+                        {/* <input
                            type="file"
                            hidden
                            onChange={handleUploadImg}
-                        />
+                        /> */}
                      </Button>
                   </Grid>
                </Grid>
+
+               <DropzoneDialog
+                  open={uploadImg.open}
+                  onSave={handleSave}
+                  acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+                  showPreviews={true}
+                  maxFileSize={5000000}
+                  onClose={handleClose}
+               />        
+
                <Button
                   type="submit"
                   fullWidth

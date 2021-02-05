@@ -12,11 +12,11 @@ const components = {
       path: "/",
       page: LoginPage
    },
-   inputProduct: {
+   inputproduct: {
       path: "/inputproduct",
       page: InputProduct
    },
-   productList: {
+   productlist: {
       path: "/productlist",
       page: ProductList
    },
@@ -28,9 +28,9 @@ const roles = {
       components.login,
    ],
    USER: [
-      components.inputProduct,
-      components.productList
+      components.inputproduct,
+      components.productlist,
    ],
-}
+};
 
 export default roles;
